@@ -1,14 +1,15 @@
 package com.spring.projectlombok.controller;
 
-import com.spring.projectlombok.model.Beer;
 import com.spring.projectlombok.model.Customer;
 import com.spring.projectlombok.services.CustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +24,14 @@ import java.util.UUID;
 public class CustomerController {
     private final CustomerService customerService;
 
+    @PostMapping
     public ResponseEntity createCustomer(@RequestBody Customer customer) {
         Customer savedCustomer = customerService.createCustomer(customer);
 
-        return new ResponseEntity(HttpStatus.CREATED);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/api/v1/customer/" + savedCustomer.getId().toString());
+
+        return new ResponseEntity(headers, HttpStatus.CREATED);
     }
 
     @GetMapping
