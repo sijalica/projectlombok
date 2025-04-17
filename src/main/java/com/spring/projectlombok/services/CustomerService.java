@@ -1,17 +1,18 @@
 package com.spring.projectlombok.services;
 
-import com.spring.projectlombok.model.Customer;
+import com.spring.projectlombok.model.CustomerDTO;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface CustomerService {
-    List<Customer> getCustomers();
-    Customer getCustomer(UUID id);
+    List<CustomerDTO> getCustomers();
+    Optional<CustomerDTO> getCustomerById(UUID id);
 
-    Customer createCustomer(Customer customer);
+    CustomerDTO createCustomer(CustomerDTO customer);
 
-    void updateCustomerById(UUID customerId, Customer customer);
+    Optional<CustomerDTO> updateCustomerById(UUID customerId, CustomerDTO customer);
 
-    void deleteCustomerById(UUID customerId);
+    Boolean deleteCustomerById(UUID customerId);
 }

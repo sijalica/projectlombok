@@ -1,6 +1,6 @@
 package com.spring.projectlombok.controller;
 
-import com.spring.projectlombok.model.Customer;
+import com.spring.projectlombok.model.CustomerDTO;
 import com.spring.projectlombok.services.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -25,8 +25,8 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @PostMapping
-    public ResponseEntity createCustomer(@RequestBody Customer customer) {
-        Customer savedCustomer = customerService.createCustomer(customer);
+    public ResponseEntity createCustomer(@RequestBody CustomerDTO customer) {
+        CustomerDTO savedCustomer = customerService.createCustomer(customer);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/api/v1/customer/" + savedCustomer.getId().toString());
@@ -35,19 +35,21 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<Customer> getAllCustomers() {
+    public List<CustomerDTO> getAllCustomers() {
         return customerService.getCustomers();
     }
 
     @GetMapping("/{customerId}")
-    public Customer getCustomerById(@PathVariable("customerId") UUID customerId) {
-        return customerService.getCustomer(customerId);
+    public CustomerDTO getCustomerById(@PathVariable("customerId") UUID customerId) {
+        return customerService.getCustomerById(customerId).orElseThrow(() -> new RuntimeException("Customer not found"));
     }
 
     @PutMapping("{customerId}")
-    public ResponseEntity updateById(@PathVariable("customerId")UUID customerId, @RequestBody Customer customer) {
+    public ResponseEntity updateById(@PathVariable("customerId")UUID customerId, @RequestBody CustomerDTO customer) {
 
-        customerService.updateCustomerById(customerId, customer);
+        if (customerService.updateCustomerById(customerId, customer).isEmpty()) {
+            throw new RuntimeException("Customer not found");
+        }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -55,7 +57,9 @@ public class CustomerController {
     @DeleteMapping("{customerId}")
     public ResponseEntity deleteById(@PathVariable("customerId")UUID customerId) {
 
-        customerService.deleteCustomerById(customerId);
+        if (!customerService.deleteCustomerById(customerId)) {
+            throw new RuntimeException("Customer not found");
+        }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

@@ -1,20 +1,21 @@
 package com.spring.projectlombok.services;
 
-import com.spring.projectlombok.model.Beer;
+import com.spring.projectlombok.model.BeerDTO;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface BeerService {
-    List<Beer> listBeers();
+    List<BeerDTO> listBeers();
 
-    Beer getBeerById(UUID id);
+    Optional<BeerDTO> getBeerById(UUID id);
 
-    Beer createBeer(Beer beer);
+    BeerDTO createBeer(BeerDTO beer);
 
-    void updateBeerById(UUID beerId, Beer beer);
+    Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beer);
 
-    void deleteById(UUID beerId);
+    Boolean deleteById(UUID beerId);
 
-    void patchBeerById(UUID beerId, Beer beer);
+    void patchBeerById(UUID beerId, BeerDTO beer);
 }

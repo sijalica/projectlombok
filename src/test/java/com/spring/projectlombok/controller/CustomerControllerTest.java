@@ -1,7 +1,7 @@
 package com.spring.projectlombok.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spring.projectlombok.model.Customer;
+import com.spring.projectlombok.model.CustomerDTO;
 import com.spring.projectlombok.services.CustomerService;
 import com.spring.projectlombok.services.CustomerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.core.Is.is;
@@ -45,9 +46,9 @@ class CustomerControllerTest {
 
     @Test
     void testCreatCustomer() throws Exception {
-        Customer customer = customerServiceImpl.getCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.getCustomers().get(0);
 
-        given(customerService.createCustomer(any(Customer.class)))
+        given(customerService.createCustomer(any(CustomerDTO.class)))
                 .willReturn(customerServiceImpl.getCustomers().get(1));
 
         mockMvc.perform(post("/api/v1/customer").contentType(MediaType.APPLICATION_JSON)
@@ -59,7 +60,10 @@ class CustomerControllerTest {
 
     @Test
     void testUpdateCustomer() throws Exception {
-        Customer customer = customerServiceImpl.getCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.getCustomers().get(0);
+
+        given(customerService.updateCustomerById(any(), any())).willReturn(Optional.of(CustomerDTO.builder()
+                .build()));
 
         mockMvc.perform(put("/api/v1/customer/" + customer.getId())
                         .content(mapper.writeValueAsString(customer))
@@ -67,7 +71,7 @@ class CustomerControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        verify(customerService).updateCustomerById(any(UUID.class), any(Customer.class));
+        verify(customerService).updateCustomerById(any(UUID.class), any(CustomerDTO.class));
     }
 
     @Test
@@ -83,9 +87,9 @@ class CustomerControllerTest {
 
     @Test
     void getCustomerById() throws Exception {
-        Customer customer = customerServiceImpl.getCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.getCustomers().get(0);
 
-        given(customerService.getCustomer(customer.getId())).willReturn(customer);
+        given(customerService.getCustomerById(customer.getId())).willReturn(Optional.of(customer));
 
         mockMvc.perform(get("/api/v1/customer/" + customer.getId())
                         .accept(MediaType.APPLICATION_JSON))

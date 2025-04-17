@@ -12,10 +12,10 @@ import java.util.UUID;
 @Setter
 @Builder
 @ToString
-public class Customer {
+public class CustomerDTO {
     private UUID id;
     private String customerName;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
-    private int version;
+    private Integer version;
 }
