@@ -1,6 +1,7 @@
 package com.spring.projectlombok.controller;
 
 import com.spring.projectlombok.model.BeerDTO;
+import com.spring.projectlombok.model.BeerStyle;
 import com.spring.projectlombok.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -52,8 +54,10 @@ public class BeerController {
     }
 
     @GetMapping
-    public List<BeerDTO> listBeers(){
-        return beerService.listBeers();
+    public List<BeerDTO> listBeers(@RequestParam(required = false) String beerName,
+                                   @RequestParam(required = false) BeerStyle beerStyle,
+                                   @RequestParam(required = false) Boolean showInventory){
+        return beerService.listBeers(beerName, beerStyle, showInventory);
     }
 
     @RequestMapping(value = "/{beerId}", method = RequestMethod.GET)
